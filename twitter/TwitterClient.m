@@ -10,8 +10,8 @@
 #import "AFNetworking.h"
 
 #define TWITTER_BASE_URL [NSURL URLWithString:@"https://api.twitter.com/"]
-#define TWITTER_CONSUMER_KEY @"biYAqubJD0rK2cRatIQTZw"
-#define TWITTER_CONSUMER_SECRET @"2cygl2irBgMQVNuWJwMn6vXiyDnWtht7gSyuRnf0Fg"
+#define TWITTER_CONSUMER_KEY @"U5IXd4U7LsuyTcSkiecuSw"
+#define TWITTER_CONSUMER_SECRET @"TQNYZskYkd7uLUqHp2SdHtU6tT8tRQ4HKjKNHGkQE"
 
 static NSString * const kAccessTokenKey = @"kAccessTokenKey";
 
@@ -63,6 +63,23 @@ static NSString * const kAccessTokenKey = @"kAccessTokenKey";
         [params setObject:@(maxId) forKey:@"max_id"];
     }
     [self getPath:@"1.1/statuses/home_timeline.json" parameters:params success:success failure:failure];
+}
+
+#pragma mark - Tweet API
+
+- (void)tweet:(NSString *)status success:(void (^)(AFHTTPRequestOperation *operation, id response))success failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"status": status}];
+    [self postPath:@"1.1/statuses/update.json" parameters:params success:success failure:failure];
+}
+
+#pragma mark - Reweet API
+
+- (void)retweet:(NSString *)statusID success:(void (^)(AFHTTPRequestOperation *operation, id response))success failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"id": statusID}];
+    NSString *path = [NSString stringWithFormat:@"%@%@.json", @"1.1/statuses/retweet/", statusID];
+    [self postPath:path parameters:params success:success failure:failure];
 }
 
 #pragma mark - Private methods
